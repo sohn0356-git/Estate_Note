@@ -8,102 +8,54 @@
 </head>
 <body>
   <div id="app">
-    <header class="hero-card">
-      <div class="hero-content">
-        <div class="tag-group">
-          <span class="tag-pill">부동산 스터디</span>
-          <span class="tag-pill">하루 학습</span>
-          <span class="tag-pill">튜토리얼</span>
-        </div>
-        <h1>일자별 폴더로 보는 부동산 공부</h1>
-        <p>
-          날짜별 폴더를 클릭하면 오늘의 유튜브 영상 5개와 핵심 요약, GPT 토막상식을 확인할 수 있습니다.
-          오늘부터 매일 학습 콘텐츠를 채워가며 공부하세요.
-        </p>
-      </div>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <strong id="total-days">0</strong>
-          <p>날짜별 스터디</p>
-        </div>
-        <div class="metric-card">
-          <strong>5</strong>
-          <p>부동산 코스</p>
-        </div>
-        <div class="metric-card">
-          <strong id="total-notes">0</strong>
-          <p>저장된 노트</p>
-        </div>
+    <header class="site-header">
+      <div class="header-content">
+        <h1>Estate Note</h1>
+        <p>부동산 공부 일지</p>
       </div>
     </header>
 
-    <section class="challenge-card">
-      <div class="section-title">
-        <h2>오늘의 학습 플랜</h2>
-        <button onclick="nextLesson()">다음 레슨 보기</button>
-      </div>
-      <strong id="current-lesson">부동산 기초 용어</strong>
-      <p id="lesson-desc">부동산 공부의 첫 걸음은 용어 정리입니다. 단어 하나하나 뜻을 익혀두면 시장 해석이 쉽습니다.</p>
-      <div class="tag-group">
-        <span class="tag-pill">전세, 월세, 매매의 차이 알기</span>
-        <span class="tag-pill">인터랙티브 학습</span>
-      </div>
-    </section>
+    <main class="main-content">
+      <section class="folder-section">
+        <div class="section-title">
+          <h2>날짜별 콘텐츠 폴더</h2>
+          <p>폴더를 클릭하면 해당 날짜의 학습 자료를 볼 수 있습니다.</p>
+        </div>
+        <div class="lesson-grid" id="day-list">
+          <!-- 날짜별 폴더가 여기에 로드됩니다 -->
+        </div>
+      </section>
 
-    <section class="lesson-card">
-      <div class="section-title">
-        <h2>날짜별 콘텐츠 폴더</h2>
-        <p>폴더를 클릭하면 해당 날짜의 학습 자료를 볼 수 있습니다.</p>
-      </div>
-      <div class="lesson-grid" id="day-list">
-        <!-- 날짜별 폴더가 여기에 로드됩니다 -->
-      </div>
-    </section>
+      <section class="content-section" id="selected-day-content" style="display: none;">
+        <div class="section-title">
+          <h2 id="selected-day-title">선택한 날짜 콘텐츠</h2>
+          <p>유튜브 영상과 GPT 토막상식을 확인하세요.</p>
+        </div>
+        <div id="day-content">
+          <!-- 선택한 날짜의 콘텐츠가 여기에 로드됩니다 -->
+        </div>
+      </section>
 
-    <section class="note-card">
-      <div class="section-title">
-        <h2>오늘의 공부 노트</h2>
-        <p>자신만의 정리를 남기고 저장해보세요.</p>
-      </div>
-      <label for="note-input">오늘 배운 내용을 간단히 메모</label>
-      <textarea id="note-input" placeholder="오늘 배운 개념, 궁금한 점, 다음에 확인할 내용 등을 기록합니다."></textarea>
-      <button onclick="addNote()">노트 저장</button>
+      <!-- AdSense 광고 -->
+      <section class="ads-section">
+        <div class="ad-container">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="XXXXXXXXXX"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </section>
+    </main>
 
-      <div class="search-bar">
-        <input type="search" id="search-input" placeholder="이전 노트 검색" oninput="filterNotes()" />
-      </div>
-      <div class="note-list" id="note-list">
-        <!-- 저장된 노트가 여기에 표시됩니다 -->
-      </div>
-    </section>
+    <!-- AdSense 광고 로드 -->
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
 
-    <section class="roadmap-card" id="selected-day-content" style="display: none;">
-      <div class="section-title">
-        <h2 id="selected-day-title">선택한 날짜 콘텐츠</h2>
-        <p>유튜브 영상과 핵심 요약, GPT 토막상식을 한 곳에서 확인합니다.</p>
-      </div>
-      <div id="day-content">
-        <!-- 선택한 날짜의 콘텐츠가 여기에 로드됩니다 -->
-      </div>
-    </section>
-
-    <!-- 광고 섹션 -->
-    <section class="ad-card">
-      <div class="ad-content">
-        <h3>부동산 전문가와 상담하기</h3>
-        <p>실제 투자 전문가에게 무료 상담을 받아보세요</p>
-        <button class="ad-button">무료 상담 신청</button>
-      </div>
-    </section>
-
-    <nav class="bottom-nav">
-      <button class="active">홈</button>
-      <button>학습</button>
-      <button>노트</button>
-      <button>폴더</button>
-    </nav>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
   </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
