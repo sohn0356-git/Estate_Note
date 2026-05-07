@@ -24,14 +24,44 @@ function createYouTubeEmbed(videoId) {
             allowfullscreen></iframe>`;
 }
 
+// 날짜 폴더 자동 생성 함수
+async function generateDateFolders() {
+  const folders = [];
+  const startDate = new Date('2026-05-01');
+  const endDate = new Date();
+  
+  // 현재 날짜까지의 모든 날짜 생성
+  for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+    const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+    const folder = dateStr;
+    
+    // 해당 폴더의 meta.json 파일 존재 여부 확인
+    try {
+      const response = await fetch(`days/${folder}/meta.json`);
+      if (response.ok) {
+        const meta = await response.json();
+        folders.push({
+          id: dateStr,
+          title: meta.title || `${dateStr} 학습`,
+          description: meta.description || `${dateStr} 부동산 공부 내용`,
+          folder: folder
+        });
+      }
+    } catch (error) {
+      // 파일이 없으면 무시
+      continue;
+    }
+  }
+  
+  return folders;
+}
+
 // 초기화 함수
 async function init() {
   try {
-    // 날짜 목록 로드
-    const response = await fetch('days/index.json');
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    dayList = await response.json();
-
+    // 날짜 목록 자동 생성
+    dayList = await generateDateFolders();
+    
     // UI 업데이트
     updateDayList();
 
@@ -40,7 +70,7 @@ async function init() {
       selectDay(dayList[0].id);
     }
 
-    console.log('Estate Note 초기화 완료');
+    console.log('Estate Note 초기화 완료 - 자동 폴더 스캔');
   } catch (error) {
     console.error('초기화 실패:', error);
     dayListEl.innerHTML = '<p>콘텐츠를 불러오지 못했습니다. 페이지를 새로고침해보세요.</p>';
