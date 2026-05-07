@@ -117,11 +117,45 @@ async function selectDay(dayId) {
   }
 }
 
-// 비디오 재생 함수
-function playVideo(videoId, thumbnailElement) {
-  const embedHtml = createYouTubeEmbed(videoId);
-  thumbnailElement.outerHTML = embedHtml;
+// 유튜브 임베드 생성 (모달용)
+function createYouTubeEmbedModal(videoId) {
+  return `<iframe class="youtube-embed-modal"
+            src="https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>`;
 }
+
+// 비디오 재생 함수 (모달 열기)
+function playVideo(videoId, thumbnailElement) {
+  // 현재 비디오 카드에서 정보 추출
+  const videoCard = thumbnailElement.closest('.video-card');
+  const title = videoCard.querySelector('.video-info h4').textContent;
+  const summary = videoCard.querySelector('.video-info p').textContent;
+
+  // 모달에 정보 설정
+  document.getElementById('modal-video-title').textContent = title;
+  document.getElementById('modal-video-summary').textContent = summary;
+  document.getElementById('modal-video-player').innerHTML = createYouTubeEmbedModal(videoId);
+
+  // 모달 열기
+  document.getElementById('video-modal').classList.add('active');
+  document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+}
+
+// 모달 닫기 함수
+function closeVideoModal() {
+  document.getElementById('video-modal').classList.remove('active');
+  document.getElementById('modal-video-player').innerHTML = ''; // 비디오 정지
+  document.body.style.overflow = ''; // 스크롤 복원
+}
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeVideoModal();
+  }
+});
 
 // 초기화 실행
 document.addEventListener('DOMContentLoaded', init);

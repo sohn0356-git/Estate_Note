@@ -49,6 +49,23 @@
       </section>
     </main>
 
+    <!-- 비디오 모달 -->
+    <div id="video-modal" class="video-modal">
+      <div class="modal-backdrop" onclick="closeVideoModal()"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-video-title"></h3>
+          <button class="modal-close" onclick="closeVideoModal()">×</button>
+        </div>
+        <div class="modal-video-container">
+          <div id="modal-video-player"></div>
+        </div>
+        <div class="modal-description">
+          <p id="modal-video-summary"></p>
+        </div>
+      </div>
+    </div>
+
     <!-- AdSense 광고 로드 -->
     <script>
       (adsbygoogle = window.adsbygoogle || []).push({});
