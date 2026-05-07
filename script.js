@@ -24,15 +24,23 @@ function createYouTubeEmbed(videoId) {
             allowfullscreen></iframe>`;
 }
 
+// 날짜 문자열 포맷 함수 (로컬 날짜 사용)
+function formatDateToYYYYMMDD(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // 날짜 폴더 자동 생성 함수
 async function generateDateFolders() {
   const folders = [];
-  const startDate = new Date('2026-05-01');
+  const startDate = new Date(2026, 4, 1); // 2026-05-01 (월은 0부터 시작)
   const endDate = new Date();
   
   // 현재 날짜까지의 모든 날짜 생성
   for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-    const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+    const dateStr = formatDateToYYYYMMDD(date);
     const folder = dateStr;
     
     // 해당 폴더의 meta.json 파일 존재 여부 확인
