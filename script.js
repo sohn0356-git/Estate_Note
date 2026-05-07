@@ -65,15 +65,19 @@ function App() {
 
   useEffect(() => {
     fetch("days/index.json")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
         setDayList(data);
         if (data.length > 0) {
           setSelectedDayId(data[0].id);
         }
       })
-      .catch(() => {
-        setDayError("날짜별 학습 폴더 목록을 불러오지 못했습니다.");
+      .catch((error) => {
+        console.error("날짜 목록 로딩 실패:", error);
+        setDayError("날짜 목록을 불러오지 못했습니다: " + error.message);
       });
   }, []);
 
@@ -270,4 +274,10 @@ function App() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(React.createElement(App));
+try {
+  root.render(React.createElement(App));
+  console.log("React 앱이 성공적으로 렌더링되었습니다.");
+} catch (error) {
+  console.error("React 렌더링 에러:", error);
+  document.getElementById("root").innerHTML = "<p>React 로딩 실패: " + error.message + "</p>";
+}
