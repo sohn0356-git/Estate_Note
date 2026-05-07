@@ -1,11 +1,13 @@
 :root {
-  --bg: #f7f8fb;
+  --bg: #eef6ff;
   --surface: #ffffff;
-  --text: #222533;
-  --muted: #5f6877;
-  --primary: #3f72af;
-  --primary-dark: #2f5b8f;
-  --border: #dce1ea;
+  --text: #212d40;
+  --muted: #6b7a96;
+  --primary: #1f6feb;
+  --primary-soft: #cde1ff;
+  --accent: #ff8a36;
+  --border: #dde7f5;
+  --shadow: 0 24px 60px rgba(12, 34, 76, 0.12);
 }
 
 * {
@@ -14,74 +16,289 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg);
+  min-height: 100vh;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(180deg, #f5f9ff 0%, #eef6ff 100%);
   color: var(--text);
-  line-height: 1.6;
 }
 
-.wrapper {
-  width: min(1100px, calc(100% - 32px));
-  margin: 0 auto;
+button,
+input,
+textarea {
+  font: inherit;
 }
 
-.site-header {
-  background: linear-gradient(135deg, #3f72af 0%, #112d4e 100%);
-  color: #fff;
-  padding: 36px 0;
+#root {
+  min-height: 100vh;
 }
 
-.site-header h1,
-.site-header p {
-  margin: 0;
-}
-
-.site-header nav {
-  margin-top: 16px;
+.app-shell {
   display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 84px;
 }
 
-.site-header a {
-  color: #e0f7ff;
-  text-decoration: none;
+.hero-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 24px;
+}
+
+.hero-card h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.hero-card p {
+  margin: 0;
+  max-width: 680px;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tag-pill {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(31, 111, 235, 0.12);
+  color: var(--primary);
   font-weight: 600;
 }
 
-.section-card {
-  background: var(--surface);
+.metric-grid,
+.bottom-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.metric-card,
+.challenge-card,
+.lesson-card,
+.note-card,
+.roadmap-card {
+  background: #ffffff;
+  border-radius: 24px;
   border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 28px;
-  margin: 24px 0;
-  box-shadow: 0 14px 35px rgba(17, 26, 44, 0.08);
+  box-shadow: 0 18px 45px rgba(12, 34, 76, 0.08);
 }
 
-.section-card h2 {
-  margin-top: 0;
+.metric-card {
+  padding: 24px;
 }
 
+.metric-card strong {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.lesson-card,
+.roadmap-card,
 .note-card {
-  background: #f0f5ff;
-  padding: 18px;
-  border-radius: 14px;
-  margin: 16px 0;
+  padding: 24px;
 }
 
-.site-footer {
-  padding: 22px 0;
-  text-align: center;
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.lesson-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lesson-card h3 {
+  margin: 0;
+}
+
+.lesson-card p {
+  margin: 0;
   color: var(--muted);
 }
 
+.lesson-card .lesson-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(31, 111, 235, 0.1);
+  color: var(--primary);
+  font-size: 0.92rem;
+}
+
+.lesson-card button,
+.note-card button {
+  border: none;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #2667d8);
+  border-radius: 14px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.lesson-card button:hover,
+.note-card button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 28px rgba(31, 111, 235, 0.18);
+}
+
+.note-card textarea {
+  width: 100%;
+  min-height: 140px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  resize: vertical;
+  outline: none;
+}
+
+.note-card label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.note-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.note-item {
+  padding: 18px;
+  border-radius: 20px;
+  background: #f8fbff;
+  border: 1px solid #dfe8f7;
+}
+
+.note-item strong {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.search-bar {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  outline: none;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.section-title h2 {
+  margin: 0;
+}
+
+.challenge-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+}
+
+.challenge-card strong {
+  display: block;
+  font-size: 1.6rem;
+}
+
+.timeline-list {
+  display: grid;
+  gap: 14px;
+}
+
+.timeline-item {
+  padding: 18px;
+  border-radius: 20px;
+  background: #f4f9ff;
+  border: 1px solid rgba(31, 111, 235, 0.12);
+}
+
+.timeline-item h4 {
+  margin: 0 0 8px;
+}
+
+.timeline-item p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid rgba(17, 26, 44, 0.08);
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  backdrop-filter: blur(16px);
+  z-index: 20;
+}
+
+.bottom-nav button {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bottom-nav button.active {
+  color: var(--primary);
+}
+
+@media (max-width: 980px) {
+  .lesson-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) {
-  .site-header,
-  .wrapper {
-    padding: 0 16px;
+  .app-shell {
+    padding: 20px 16px 104px;
   }
 
-  .site-header nav {
-    gap: 12px;
+  .lesson-grid,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-card {
+    padding: 24px;
+  }
+
+  .bottom-nav {
+    gap: 6px;
   }
 }
