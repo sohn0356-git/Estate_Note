@@ -53,11 +53,52 @@ function App() {
   const [draft, setDraft] = useState("");
   const [search, setSearch] = useState("");
   const [activeLesson, setActiveLesson] = useState(1);
-  const [activeTab, setActiveTab] = useState("home");
+  const [dayList, setDayList] = useState([]);
+  const [selectedDayId, setSelectedDayId] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [dayError, setDayError] = useState("");
+  const [loadingDay, setLoadingDay] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("estate-note-data", JSON.stringify(notes));
   }, [notes]);
+
+  useEffect(() => {
+    fetch("days/index.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setDayList(data);
+        if (data.length > 0) {
+          setSelectedDayId(data[0].id);
+        }
+      })
+      .catch(() => {
+        setDayError("날짜별 학습 폴더 목록을 불러오지 못했습니다.");
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!selectedDayId) return;
+    const selected = dayList.find((day) => day.id === selectedDayId);
+    if (!selected) return;
+
+    setLoadingDay(true);
+    setDayError("");
+
+    Promise.all([
+      fetch(`days/${selected.folder}/meta.json`).then((res) => res.json()),
+      fetch(`days/${selected.folder}/links.json`).then((res) => res.json()),
+    ])
+      .then(([meta, links]) => {
+        setSelectedDay({ meta, links });
+      })
+      .catch(() => {
+        setDayError("선택한 날짜의 콘텐츠를 불러오지 못했습니다.");
+      })
+      .finally(() => {
+        setLoadingDay(false);
+      });
+  }, [selectedDayId, dayList]);
 
   const selectedLesson = lessons.find((item) => item.id === activeLesson);
 
@@ -90,24 +131,24 @@ function App() {
             <span className="tag-pill">하루 학습</span>
             <span className="tag-pill">튜토리얼</span>
           </div>
-          <h1>하루하루 부동산을 알아가는 실전 학습</h1>
+          <h1>일자별 폴더로 보는 부동산 공부</h1>
           <p>
-            Estate Note는 부동산 공부를 처음 시작하는 사람도 따라올 수 있는 튜토리얼형 웹사이트입니다.
-            매일 하나씩 개념을 익히고, 노트로 기록하며 공부 습관을 만들 수 있습니다.
+            날짜별 폴더를 클릭하면 오늘의 유튜브 링크 5개와 GPT 토막상식을 확인할 수 있습니다.
+            오늘부터 매일 학습 콘텐츠를 채워가며 공부하세요.
           </p>
         </div>
         <div className="metric-grid">
           <div className="metric-card">
-            <strong>5일</strong>
-            <p>연속 학습 스티커</p>
+            <strong>{dayList.length}</strong>
+            <p>날짜별 스터디</p>
           </div>
           <div className="metric-card">
-            <strong>오늘 미션</strong>
-            <p>{selectedLesson ? selectedLesson.title : "오늘 미션을 선택하세요"}</p>
+            <strong>{lessons.length}</strong>
+            <p>부동산 코스</p>
           </div>
           <div className="metric-card">
-            <strong>레슨 수</strong>
-            <p>{lessons.length}단계 코스</p>
+            <strong>{notes.length}</strong>
+            <p>저장된 노트</p>
           </div>
         </div>
       </section>
@@ -115,30 +156,33 @@ function App() {
       <section className="challenge-card">
         <div className="section-title">
           <h2>오늘의 학습 플랜</h2>
-          <button onClick={() => setActiveTab("study")}>학습으로 이동</button>
+          <button onClick={() => setActiveLesson(activeLesson % lessons.length + 1)}>
+            다음 레슨 보기
+          </button>
         </div>
         <strong>{selectedLesson?.title}</strong>
         <p>{selectedLesson?.note}</p>
         <div className="tag-group">
           <span className="tag-pill">{selectedLesson?.subtitle}</span>
-          <span className="tag-pill">React 기반 인터랙티브</span>
+          <span className="tag-pill">Day Folder 방식</span>
         </div>
       </section>
 
       <section className="lesson-card">
         <div className="section-title">
-          <h2>부동산 집중 코스</h2>
-          <p>상위 부동산 앱에서 영감을 받은 카드형 레이아웃</p>
+          <h2>날짜별 콘텐츠 폴더</h2>
+          <p>폴더를 클릭하면 해당 날짜의 학습 자료를 볼 수 있습니다.</p>
         </div>
         <div className="lesson-grid">
-          {lessons.map((lesson) => (
-            <article key={lesson.id} className="lesson-card">
-              <span className="lesson-tag">Day {lesson.id}</span>
-              <h3>{lesson.title}</h3>
-              <p>{lesson.subtitle}</p>
-              <button onClick={() => setActiveLesson(lesson.id)}>
-                오늘 공부하기
-              </button>
+          {dayList.map((day) => (
+            <article
+              key={day.id}
+              className={`lesson-card day-card ${selectedDayId === day.id ? "active" : ""}`}
+              onClick={() => setSelectedDayId(day.id)}
+            >
+              <span className="lesson-tag">{day.id}</span>
+              <h3>{day.title}</h3>
+              <p>{day.description}</p>
             </article>
           ))}
         </div>
@@ -182,24 +226,44 @@ function App() {
 
       <section className="roadmap-card">
         <div className="section-title">
-          <h2>스터디 로드맵</h2>
-          <p>하루하루 배워가며 전체 흐름을 잡는 구성</p>
+          <h2>선택한 날짜 콘텐츠</h2>
+          <p>유튜브 링크와 GPT 토막상식을 한 곳에서 확인합니다.</p>
         </div>
-        <div className="timeline-list">
-          {lessons.map((lesson) => (
-            <article key={lesson.id} className="timeline-item">
-              <h4>Day {lesson.id}. {lesson.title}</h4>
-              <p>{lesson.subtitle}</p>
-            </article>
-          ))}
-        </div>
+        {loadingDay ? (
+          <p>콘텐츠를 불러오는 중입니다...</p>
+        ) : dayError ? (
+          <p>{dayError}</p>
+        ) : selectedDay ? (
+          <div>
+            <strong>{selectedDay.meta.title}</strong>
+            <p>{selectedDay.meta.description}</p>
+            <div className="note-card">
+              <h3>GPT 토막상식</h3>
+              <p>{selectedDay.meta.fact}</p>
+            </div>
+            <div className="note-card">
+              <h3>오늘의 유튜브 링크</h3>
+              <ul>
+                {selectedDay.links.map((link, index) => (
+                  <li key={index}>
+                    <a href={link.url} target="_blank" rel="noreferrer">
+                      {link.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <p>날짜별 폴더를 선택해주세요.</p>
+        )}
       </section>
 
       <nav className="bottom-nav">
-        <button className={activeTab === "home" ? "active" : ""} onClick={() => setActiveTab("home")}>홈</button>
-        <button className={activeTab === "study" ? "active" : ""} onClick={() => setActiveTab("study")}>학습</button>
-        <button className={activeTab === "note" ? "active" : ""} onClick={() => setActiveTab("note")}>노트</button>
-        <button className={activeTab === "profile" ? "active" : ""} onClick={() => setActiveTab("profile")}>프로필</button>
+        <button className="active">홈</button>
+        <button>학습</button>
+        <button>노트</button>
+        <button>폴더</button>
       </nav>
     </div>
   );
