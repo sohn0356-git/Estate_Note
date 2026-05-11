@@ -101,7 +101,7 @@ body {
 }
 
 .lesson-grid > .lesson-card {
-  min-width: 280px;
+  min-width: 320px;
   flex: 0 0 auto;
   scroll-snap-align: start;
 }

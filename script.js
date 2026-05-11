@@ -38,8 +38,8 @@ async function generateDateFolders() {
   const startDate = new Date(2026, 4, 1); // 2026-05-01 (월은 0부터 시작)
   const endDate = new Date();
   
-  // 현재 날짜까지의 모든 날짜 생성
-  for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+  // 현재 날짜부터 과거로 역순으로 생성 (최신순 정렬)
+  for (let date = new Date(endDate); date >= startDate; date.setDate(date.getDate() - 1)) {
     const dateStr = formatDateToYYYYMMDD(date);
     const folder = dateStr;
     
